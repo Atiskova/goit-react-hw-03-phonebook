@@ -17,6 +17,21 @@ export class App extends React.Component {
     filter: '',
   };
 
+  componentDidMount() {
+    const contacts = JSON.parse(localStorage.getItem('contacts'));
+    if (contacts) {
+      this.setState({
+        contacts,
+      });
+    }
+  }
+
+  componentDidUpdate(_, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
+
   addContact = ({ name, number }) => {
     const { contacts } = this.state;
     const isContactExists = contacts.some(
@@ -77,7 +92,9 @@ export class App extends React.Component {
             ></ContactList>
           )}
           {contacts.length === 0 && <p>There are no contacts yet.</p>}
-          {contacts.length !== 0 && filteredContacts.length === 0 && <p>Contact wasn't found.</p>}
+          {contacts.length !== 0 && filteredContacts.length === 0 && (
+            <p>Contact wasn't found.</p>
+          )}
         </Section>
       </Container>
     );
